@@ -21,12 +21,14 @@ Quote         'x
 Lists         (a b ...)
               [a b ...]    (Optional)
 Conses        (a . d)
+              [a . d]      (Optional)
 Vectors       #(a b ...)
-Characters    #\b (#\space and #\newline are not IMPLEMENTED)
+              #[a b ...)   (Optional)
+Characters    #\C, #\space, #\newline
 False         #f, #F
 True          #t, #T
-Unspecified   #u, #U (Opt.)
-Logical EOF   ## (Opt.)
+Unspecified   #u, #U       (Optional)
+Logical EOF   ##           (Optional)
 Numbers       #b0101001, #o1726m #d2349, #x0123456789abcedf, 1234, 1234.00, etc.
 Strings       "...", "\"\\"
 Symbols       asdf, +, etc.
@@ -62,6 +64,7 @@ SET(LOC,V)          Set a local variable as in (set! VARIABLE V).  Opt.
 MAKE_CHAR(I)        Create a lisp CHARACTER VALUE from a C integer.
 
 LIST_2_VECTOR(X)    Convert list VALUE X into a VECTOR VALUE.
+BRACKET_LISTS       If defined, support [...] bracketed list syntax.
 
 STRING(char*,int)   Create a new lisp STRING VALUE from a MALLOCed buffer.
 ESCAPE_STRING(X)    Return a new STRING VALUE with escaped characters (\\, \") replaced.  Opt.
