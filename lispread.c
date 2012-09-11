@@ -1,15 +1,18 @@
 /*
 ** lispread.c - a generic lisp reader.
-** Copyright 1998, 1999, 2011, 2012 Kurt A. Stephens http://kurtstephens.com/
+** Copyright 1998, 1999, 2011, 2012  Kurt A. Stephens  http://kurtstephens.com/
 */
 /*
-This lisp reader is very minimal, it does not implement the full Common Lisp syntax.  In general it is compliant with the Revised 5 Scheme Report.  
+This lisp reader is very minimal.
+It does not implement the full Common Lisp syntax.
+In general, it is compliant with a subset of the Revised 5 Scheme Report,
+with a few common extensions.
 
 The ';', '(', ')', '#' and whitespace characters are token terminators.
 Tokens that are not numbers are assumed to be symbols.
 This reader does not decaseify symbols before calling STRING_2_SYMBOL.
 ';' comments are treated as whitespace.
-Note: the "#!" comment allows lisp files to execute scripts on unix systems that support '#!/usr/local/bin/lisp'.
+The "#!...\n" comment allows lisp files to execute systems that support '#!PROG' scripts.
 
 The following synactic structures can be read:
 
