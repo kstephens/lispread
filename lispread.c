@@ -13,9 +13,10 @@ Note: the "#!" comment allows lisp files to execute scripts on unix systems that
 
 The following synactic structures can be read:
 
-Comments      ;...\n, #!...\n
+Comments      ;...\n, #!...\n, #;DATUM
 Quote         'x
 Lists         (a b ...)
+              [a b ...]    (Optional)
 Conses        (a . d)
 Vectors       #(a b ...)
 Characters    #\b (#\space and #\newline are not IMPLEMENTED)
@@ -173,9 +174,7 @@ READ_DECL
   c = eat_whitespace_peekchar(stream);
   if ( c == EOF )
     RETURN(EOS);
-
   GETC(stream);
-
   switch ( c ) {
     case '\'':
       RETURN(CONS(SYMBOL(quote), CONS(READ_CALL(), NIL)));
@@ -192,12 +191,17 @@ READ_DECL
       }
       break;
 
-    case '(': {
+#ifdef BRACKET_LISTS
+    case '[': c = ']'; goto list;
+#endif
+    case '(': c = ')';      list: {
+      int terminator = c;
       VALUE l = NIL, lc = NIL;
-      while ( (c = eat_whitespace_peekchar(stream)) != EOF ) {
+      while ( 1 ) {
         VALUE x;
-        
-        if ( c == ')' ) {
+        c = eat_whitespace_peekchar(stream);
+        if ( c == EOF ) { break; /* RETURN(ERROR("eos in list")); HUH??? */}
+        if ( c == terminator ) {
 	  GETC(stream);
           break;
         }
@@ -212,9 +216,10 @@ READ_DECL
           SET_CDR(lc, READ_CALL());
 
           c = eat_whitespace_peekchar(stream);
+          // if ( c == EOF ) { RETURN(ERROR("eos in list")); }
           GETC(stream);
-          if ( c != ')' ) {
-            RETURN(ERROR("expected ')': found '%c'", c));
+          if ( c != terminator ) {
+            RETURN(ERROR("expected '%c': found '%c'", terminator, c));
           }
           break;
         } else {
@@ -447,7 +452,11 @@ READ_DECL
       buf = MALLOC(len + 1);
       buf[0] = c;
 
-      while ( (c = PEEKC(stream)) != EOF && c != ';' && c != '(' && c != ')' && c != '#' && ! isspace(c) ) {
+      while ( (c = PEEKC(stream)) != EOF && c != ';' && c != '(' && c != ')'
+#ifdef BRACKET_LISTS
+              && c != '[' && c != ']'
+#endif
+              && c != '#' && ! isspace(c) ) {
         GETC(stream);
         buf = REALLOC(buf, len + 2);
         buf[len ++] = c;
