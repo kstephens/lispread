@@ -485,6 +485,7 @@ READ_DECL
       break;
 
     default:
+      if ( c >= 128 ) goto read_number; // UTF8, 8-bit encoding?
       RETURN(ERROR("unexpected character '%c'", c));
   }
 }
