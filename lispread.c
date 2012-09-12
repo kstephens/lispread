@@ -206,7 +206,7 @@ READ_DECL
       while ( 1 ) {
         VALUE x;
         c = eat_whitespace_peekchar(stream);
-        if ( c == EOF ) { break; /* RETURN(ERROR("eos in list")); HUH??? */}
+        if ( c == EOF ) { RETURN(ERROR("eos in list")); }
         if ( c == terminator ) {
 	  GETC(stream);
           break;
@@ -222,7 +222,7 @@ READ_DECL
           SET_CDR(lc, READ_CALL());
 
           c = eat_whitespace_peekchar(stream);
-          // if ( c == EOF ) { RETURN(ERROR("eos in list")); }
+          if ( c == EOF ) { RETURN(ERROR("eos in '.' list after cdr")); }
           GETC(stream);
           if ( c != terminator ) {
             RETURN(ERROR("expected '%c': found '%c'", terminator, c));
@@ -248,7 +248,7 @@ READ_DECL
       case EOF:
 	RETURN(ERROR("eos after '#'"));
 
-	/* #! sh-bang comment till eof */
+	/* #! sh-bang comment till EOL. */
       case '!':
 #if READ_DEBUG_WHITESPACE
 	fprintf(stderr, "  read: #!\n");
