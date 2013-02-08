@@ -171,9 +171,10 @@ int eat_whitespace_peekchar(VALUE stream)
 READ_DECL
 {
   int c;
-  int radix = 10, skip_radix_char = 0;
+  int radix, skip_radix_char;
 
  try_again:
+  radix = 10; skip_radix_char = 0;
 #ifdef READ_PROLOGUE
   READ_PROLOGUE;
 #endif
