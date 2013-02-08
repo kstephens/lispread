@@ -201,7 +201,11 @@ READ_DECL
 #ifdef BRACKET_LISTS
     case '[': c = ']'; goto list;
 #endif
-    case '(': c = ')';      list: {
+    case '(': c = ')';
+#ifdef BRACKET_LISTS
+                            list:
+#endif
+      {
       int terminator = c;
       VALUE l = NIL, lc = NIL;
       while ( 1 ) {
