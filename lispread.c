@@ -112,13 +112,17 @@ ERROR(format,...)   Raise an error using the printf() format.
 #define READ_DEBUG 0
 #endif
 
+#ifndef READ_STATE
+#define READ_STATE
+#endif
+
 #ifndef F
 #define F NIL
 #endif
 
 static
 int eat_whitespace_peekchar(VALUE stream)
-{
+{ READ_STATE
   int c;
 
  more_whitespace:
@@ -169,7 +173,7 @@ int eat_whitespace_peekchar(VALUE stream)
 #endif
 
 READ_DECL
-{
+{ READ_STATE
   int c;
   int radix, skip_radix_char;
 
