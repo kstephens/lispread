@@ -172,6 +172,15 @@ int eat_whitespace_peekchar(VALUE stream)
 #define REALLOC(P,S) realloc(P,S)
 #endif
 
+static int macro_terminating_charQ(int c)
+{
+  return c == EOF || c == ';' || c == '(' || c == ')'
+#ifdef BRACKET_LISTS
+    || c == '[' || c == ']'
+#endif
+    || c == '#' || isspace(c);
+}
+
 READ_DECL
 { READ_STATE
   int c;
@@ -301,49 +310,25 @@ READ_DECL
       case '(':
 	RETURN(LIST_2_VECTOR(READ_CALL()));
         
-      case '\\':
+      case '\\': {
+        char *buf; size_t len = 1;
 	GETC(stream);
-	c = GETC(stream);
-
-	{
-	  const char *charname = 0;
-
-	  /* Handle #\space and #\newline */
-	  if ( tolower(c) == 's' ) {
-	    const char *s;
-
-	    charname = " space";
-	  match_charname:
-	    
-	    s = charname + 2;
-
-	    do {
-	      int c2;
-
-	      if ( ! *s ) {
-		/* fprintf(stderr, "READ: \#%s => \#%c\n", charname, c); */ 
-		c = charname[0];
-		break;
-	      }
-	      c2 = PEEKC(stream);
-	      if ( c2 == EOF )
-		break;
-	      if ( tolower(c2) != *(s ++) ) {
-		break;
-	      }
-	      GETC(stream);
-	    } while ( 1 );
-
-	  } else if ( tolower(c) == 'n' ) {
-	    charname = "\nnewline";
-	    goto match_charname;
-	  }
-	}
-
-	if ( c == EOF ) {
+        if ( (c = GETC(stream)) == EOF )
 	  RETURN(ERROR("eos after '#\\'"));
-	}
+        buf = MALLOC(len + 1); buf[0] = c;
+        if ( isalpha(c) )
+          while ( isalpha(c = PEEKC(stream)) && ! macro_terminating_charQ(c) ) {
+            GETC(stream);
+            buf = REALLOC(buf, len + 2);
+            buf[len ++] = c;
+          }
+        buf[len] = '\0';
+        if ( strcasecmp(buf, "space") == 0 ) c = ' ';
+        else if ( strcasecmp(buf, "newline") == 0 ) c = '\n';
+        else if ( len > 1 ) RETURN(ERROR("unknown char name '#\\%s'", buf));
+        else c = buf[0];
 	RETURN(MAKE_CHAR(c));
+      }
 
       case 'f': case 'F':
 	GETC(stream);
@@ -459,19 +444,11 @@ READ_DECL
     case 'P': case 'Q': case 'R': case 'S': case 'T':
     case 'U': case 'V': case 'W': case 'X': case 'Y': case 'Z':
     {
-      char *buf;
-      size_t len;
       VALUE s, n;
+      char *buf; size_t len = 1;
 
-      len = 1;
-      buf = MALLOC(len + 1);
-      buf[0] = c;
-
-      while ( (c = PEEKC(stream)) != EOF && c != ';' && c != '(' && c != ')'
-#ifdef BRACKET_LISTS
-              && c != '[' && c != ']'
-#endif
-              && c != '#' && ! isspace(c) ) {
+      buf = MALLOC(len + 1); buf[0] = c;
+      while ( ! macro_terminating_charQ(c = PEEKC(stream)) ) {
         GETC(stream);
         buf = REALLOC(buf, len + 2);
         buf[len ++] = c;
