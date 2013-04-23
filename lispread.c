@@ -48,8 +48,9 @@ READ_DECL_END       Terminate the read C function definition.  Opt.
 READ_CALL()         Call the lisp read function recursively.
 RETURN(X)           Return a VALUE from the READ_DECL function.  Opt.
 
-MALLOC(s)           Allocate memory buffer from lisp.
+MALLOC(s)           Allocate a character memory buffer from lisp.
 REALLOC(p,s)        Reallocate a previously MALLOCed buffer from lisp.
+FREE(p)             Free a previouly MALLOCed buffer from lisp.
 
 PEEKC(stream)       Peek a C char or EOF from the stream.  Opt.  See UNGETC().
 UNGETC(stream,c)    Used to implement PEEKC() if PEEKC is #undef.  Opt.
@@ -170,6 +171,10 @@ int eat_whitespace_peekchar(VALUE stream)
 
 #ifndef REALLOC
 #define REALLOC(P,S) realloc(P,S)
+#endif
+
+#ifndef FREE
+#define FREE(P) free(P)
 #endif
 
 static int macro_terminating_charQ(int c)
@@ -327,6 +332,7 @@ READ_DECL
         else if ( strcasecmp(buf, "newline") == 0 ) c = '\n';
         else if ( len > 1 ) RETURN(ERROR("unknown char name '#\\%s'", buf));
         else c = buf[0];
+        FREE(buf);
 	RETURN(MAKE_CHAR(c));
       }
 
