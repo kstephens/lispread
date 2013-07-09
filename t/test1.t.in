@@ -1,0 +1,23 @@
+#! comment to eol
+;; comment to eol
+123
+-123
+#b010101
+#o01234
+#d5678
+#x9abcde
+asymbol
+""
+"a string"
+"a string with \\ escapes \0123"
+(a list of symbols)
+(a dotted . list)
+#(a vector of symbols)
+#(1 2 3 4)
+#t
+#f
+#u
+' quote
+` quasiquote
+, unquote
+,@ unquote-splicing
