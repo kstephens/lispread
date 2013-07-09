@@ -380,6 +380,7 @@ READ_DECL
 	
       case 'x': case 'X':
 	skip_radix_char = 1; radix = 16;
+	GETC(stream);
 
       read_radix_number:
         // c = GETC(stream);
