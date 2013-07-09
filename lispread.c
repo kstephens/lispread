@@ -465,7 +465,7 @@ READ_DECL
       s = STRING(buf + skip_radix_char, len - skip_radix_char);
       n = STRING_2_NUMBER(s, radix);
       if ( EQ(n, F) ) {
-        if ( skip_radix_char ) RETURN(ERROR("invalid number string '%s'", buf));
+        if ( skip_radix_char ) RETURN(ERROR("invalid number string '%s'", buf + skip_radix_char));
 	n = STRING_2_SYMBOL(s);
 #ifdef NIL_SYMBOL
         if ( EQ(n, NIL_SYMBOL) ) {
