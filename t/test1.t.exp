@@ -1,34 +1,47 @@
 + t/test1.t
+================================
   fpos = 0
 MALLOC(2) => 0x8001
 MALLOC(4) => 0x8002
 STRING(123,3) => 0x8002
 STRING_2_NUMBER(123) => 0x207b
+  result alloc_id = 0x207b
+================================
   fpos = 39
 MALLOC(2) => 0x8003
 MALLOC(5) => 0x8004
 STRING(-123,4) => 0x8004
 STRING_2_NUMBER(-123) => 0x1f85
+  result alloc_id = 0x1f85
+================================
   fpos = 44
 MALLOC(2) => 0x8005
 MALLOC(7) => 0x8006
 STRING(010101,6) => 0x8006
 STRING_2_NUMBER(010101) => 0x2015
+  result alloc_id = 0x2015
+================================
   fpos = 53
 MALLOC(2) => 0x8007
 MALLOC(6) => 0x8008
 STRING(01234,5) => 0x8008
 STRING_2_NUMBER(01234) => 0x229c
+  result alloc_id = 0x229c
+================================
   fpos = 61
 MALLOC(2) => 0x8009
 MALLOC(5) => 0x800a
 STRING(5678,4) => 0x800a
 STRING_2_NUMBER(5678) => 0x362e
+  result alloc_id = 0x362e
+================================
   fpos = 68
 MALLOC(2) => 0x800b
 MALLOC(7) => 0x800c
 STRING(9abcde,6) => 0x800c
 STRING_2_NUMBER(9abcde) => 0x9adcde
+  result alloc_id = 0x9adcde
+================================
   fpos = 77
 MALLOC(2) => 0x800d
 MALLOC(8) => 0x800e
@@ -36,19 +49,27 @@ STRING(asymbol,7) => 0x800e
 STRING_2_NUMBER(asymbol) => 0x201
 MALLOC(7) => 0x800f
 STRING_2_SYMBOL(asymbol) => 0x800f
+  result alloc_id = 0x800f
+================================
   fpos = 85
 MALLOC(1) => 0x8010
 MALLOC(1) => 0x8011
 STRING(,0) => 0x8011
+  result alloc_id = 0x8011
+================================
   fpos = 88
 MALLOC(1) => 0x8012
 MALLOC(9) => 0x8013
 STRING(a string,8) => 0x8013
+  result alloc_id = 0x8013
+================================
   fpos = 99
 MALLOC(1) => 0x8014
 REALLOC(0x8014,17) => 0x8015
 MALLOC(31) => 0x8016
 STRING(a string with \\ escapes \0123,30) => 0x8016
+  result alloc_id = 0x8016
+================================
   fpos = 132
 MALLOC(2) => 0x8014
 MALLOC(2) => 0x8018
@@ -85,6 +106,8 @@ STRING_2_SYMBOL(symbols) => 0x8025
 MALLOC(16) => 0x8026
 CONS(0x8025,0x0) => 0x8026
 SET_CDR(0x8022,0x8026)
+  result alloc_id = 0x801a
+================================
   fpos = 152
 MALLOC(2) => 0x8027
 MALLOC(2) => 0x8028
@@ -110,6 +133,8 @@ MALLOC(5) => 0x8031
 STRING(list,4) => 0x8031
 STRING_2_NUMBER(list) => 0x201
 SET_CDR(0x802d,0x801d)
+  result alloc_id = 0x8029
+================================
   fpos = 170
 MALLOC(2) => 0x8032
 MALLOC(2) => 0x8033
@@ -140,7 +165,8 @@ STRING_2_NUMBER(symbols) => 0x201
 MALLOC(16) => 0x803e
 CONS(0x8025,0x0) => 0x803e
 SET_CDR(0x803b,0x803e)
-LIST_2_VECTOR(0x8034)MALLOC(2) => 0x803f
+LIST_2_VECTOR(0x8034)
+MALLOC(2) => 0x803f
 MALLOC(2) => 0x8040
 STRING(1,1) => 0x8040
 STRING_2_NUMBER(1) => 0x2001
@@ -167,8 +193,15 @@ STRING_2_NUMBER(4) => 0x2004
 MALLOC(16) => 0x804a
 CONS(0x2004,0x0) => 0x804a
 SET_CDR(0x8047,0x804a)
-LIST_2_VECTOR(0x8041)  fpos = 207
+LIST_2_VECTOR(0x8041)
+  result alloc_id = 0x200
+================================
+  fpos = 207
+  result alloc_id = 0x201
+================================
   fpos = 210
+  result alloc_id = 0x202
+================================
   fpos = 213
 MALLOC(5) => 0x804b
 STRING_2_SYMBOL(quote) => 0x804b
@@ -180,6 +213,8 @@ MALLOC(16) => 0x804e
 CONS(0x804b,0x0) => 0x804e
 MALLOC(16) => 0x804f
 CONS(0x804b,0x804e) => 0x804f
+  result alloc_id = 0x804f
+================================
   fpos = 221
 MALLOC(10) => 0x8050
 STRING_2_SYMBOL(quasiquote) => 0x8050
@@ -191,6 +226,8 @@ MALLOC(16) => 0x8053
 CONS(0x8050,0x0) => 0x8053
 MALLOC(16) => 0x8054
 CONS(0x8050,0x8053) => 0x8054
+  result alloc_id = 0x8054
+================================
   fpos = 234
 MALLOC(7) => 0x8055
 STRING_2_SYMBOL(unquote) => 0x8055
@@ -202,6 +239,8 @@ MALLOC(16) => 0x8058
 CONS(0x8055,0x0) => 0x8058
 MALLOC(16) => 0x8059
 CONS(0x8055,0x8058) => 0x8059
+  result alloc_id = 0x8059
+================================
   fpos = 244
 MALLOC(16) => 0x805a
 STRING_2_SYMBOL(unquote_splicing) => 0x805a
@@ -216,5 +255,35 @@ MALLOC(16) => 0x805f
 CONS(0x805b,0x0) => 0x805f
 MALLOC(16) => 0x8060
 CONS(0x805a,0x805f) => 0x8060
+  result alloc_id = 0x8060
+================================
   fpos = 264
+MALLOC(2) => 0x8061
+MALLOC(10) => 0x8062
+STRING(commented,9) => 0x8062
+STRING_2_NUMBER(commented) => 0x201
+MALLOC(9) => 0x8063
+STRING_2_SYMBOL(commented) => 0x8063
+MALLOC(16) => 0x8064
+CONS(0x8063,0x0) => 0x8064
+MALLOC(2) => 0x8065
+MALLOC(6) => 0x8066
+STRING(datum,5) => 0x8066
+STRING_2_NUMBER(datum) => 0x201
+MALLOC(5) => 0x8067
+STRING_2_SYMBOL(datum) => 0x8067
+MALLOC(16) => 0x8068
+CONS(0x8067,0x0) => 0x8068
+SET_CDR(0x8064,0x8068)
+MALLOC(2) => 0x8069
+REALLOC(0x8069,17) => 0x806a
+MALLOC(18) => 0x806b
+STRING(uncommented-datum,17) => 0x806b
+STRING_2_NUMBER(uncommented-datum) => 0x201
+MALLOC(17) => 0x806c
+STRING_2_SYMBOL(uncommented-datum) => 0x806c
+  result alloc_id = 0x806c
+================================
+  fpos = 303
+  result alloc_id = 0xffffffffffffffff
 exit(0)
