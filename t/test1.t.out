@@ -165,7 +165,8 @@ STRING_2_NUMBER(symbols) => 0x201
 MALLOC(16) => 0x803e
 CONS(0x8025,0x0) => 0x803e
 SET_CDR(0x803b,0x803e)
-LIST_2_VECTOR(0x8034)MALLOC(2) => 0x803f
+LIST_2_VECTOR(0x8034)
+MALLOC(2) => 0x803f
 MALLOC(2) => 0x8040
 STRING(1,1) => 0x8040
 STRING_2_NUMBER(1) => 0x2001
@@ -192,7 +193,8 @@ STRING_2_NUMBER(4) => 0x2004
 MALLOC(16) => 0x804a
 CONS(0x2004,0x0) => 0x804a
 SET_CDR(0x8047,0x804a)
-LIST_2_VECTOR(0x8041)  result alloc_id = 0x200
+LIST_2_VECTOR(0x8041)
+  result alloc_id = 0x200
 ================================
   fpos = 207
   result alloc_id = 0x201

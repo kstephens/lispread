@@ -168,7 +168,7 @@ void set_cdr(struct pair *p, VALUE v)
 #define STRING(P,S)        make_string(P,S)
 #define STRING_2_NUMBER(X,RADIX) string_2_number(X,RADIX)
 #define STRING_2_SYMBOL(X) string_2_symbol(X)
-#define LIST_2_VECTOR(X) (printf("LIST_2_VECTOR(%p)", P(X)), X)
+#define LIST_2_VECTOR(X) (printf("LIST_2_VECTOR(%p)\n", P(X)), X)
 #define SYMBOL(NAME)    string_2_symbol(#NAME)
 #define SYMBOL_DOT      string_2_symbol(".")
 #define BRACKET_LISTS   1
