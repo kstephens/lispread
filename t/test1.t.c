@@ -178,8 +178,11 @@ void set_cdr(struct pair *p, VALUE v)
 int main(int argc, char **argv)
 {
   while ( ! feof(stdin) ) {
+    VALUE result;
+    printf("================================\n");
     printf("  fpos = %lu\n", (unsigned long) ftell(stdin));
-    test_read(stdin);
+    result = test_read(stdin);
+    printf("  result alloc_id = %p\n", alloc_id(result));
   }
   return 0;
 }
