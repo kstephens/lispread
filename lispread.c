@@ -288,7 +288,7 @@ READ_DECL
 	{
 	  int level = 1;
 	  GETC(stream);
-	  while ( (c = GETC(stream)) != EOF && level > 0 ) {
+	  while ( level > 0 && (c = GETC(stream)) != EOF ) {
 	    if ( c == '|' && PEEKC(stream) == '#' ) {
 	      GETC(stream);
 	      -- level;
