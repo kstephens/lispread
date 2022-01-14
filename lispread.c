@@ -405,27 +405,23 @@ READ_DECL
       break;
 
     case '"': {
-      char *buf;
-      size_t len;
-
-      len = 0;
-      buf = MALLOC(len + 1);
+      size_t buflen = 2, len = 0;
+      char *buf = MALLOC(buflen += buflen + 1);
       while ( (c = GETC(stream)) != '"' ) {
+      again:
         if ( c == EOF ) {
           RETURN(ERROR("EOS in string"));
         }
-        buf = REALLOC(buf, len + 2);
+        if ( buflen <= len )
+          buf = REALLOC(buf, buflen += buflen + 1);
         buf[len ++] = c;
         
         if ( c == '\\' ) {
-          if ( (c = GETC(stream)) == EOF ) {
-            RETURN(ERROR("EOS in string"));
-          }
-          buf = REALLOC(buf, len + 2);
-          buf[len ++] = c;
+          c = GETC(stream);
+          goto again;
         }
       }
-
+      buf = REALLOC(buf, len + 1);
       buf[len] = '\0';
       RETURN(ESCAPE_STRING(STRING(buf, len)));
     }
